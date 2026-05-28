@@ -1,3 +1,4 @@
+# Ghazi-Soft For Design And Development #
 # Car Dealership Platform - Backend
 
 A complete Go backend for a car dealership platform with JWT authentication, role-based access control, and comprehensive API endpoints.
