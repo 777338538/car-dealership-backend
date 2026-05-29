@@ -16,6 +16,6 @@ WORKDIR /app
 
 COPY --from=builder /app/main .
 
-EXPOSE 2020
+EXPOSE 3000
 
 CMD ["./main"]
