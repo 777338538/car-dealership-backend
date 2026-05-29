@@ -36,7 +36,7 @@ func main() {
 
 		// Default local port
 		if listenAddr == "" {
-			listenAddr = ":2020"
+			listenAddr = ":3000"
 		}
 
 		server := NewAPIServer(listenAddr, store)
