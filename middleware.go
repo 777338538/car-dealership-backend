@@ -376,10 +376,15 @@ func ValidateImageURL(url string) bool {
 		if !valid {
 			return false
 		}
-		// Check for SVG content embedded in base64 (security risk)
-		if strings.Contains(lower, "svg") {
-			return false
-		}
+			// Check for SVG in the MIME type header only, not the whole base64 content
+			// Searching for "svg" in the entire base64 string causes false positives
+			header := lower
+			if commaIdx := strings.Index(lower, ","); commaIdx != -1 {
+				header = lower[:commaIdx]
+			}
+			if strings.Contains(header, "svg") {
+				return false
+			}
 		return true
 	}
 

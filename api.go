@@ -511,7 +511,13 @@ func (s *APIServer) handleAddCarImage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 		if !ValidateImageURL(req.ImageURL) {
-			log.Printf("[SECURITY] Invalid image upload attempt for car %d: format or content rejected", carID)
+			prefix := ""
+			if len(req.ImageURL) > 50 {
+				prefix = req.ImageURL[:50]
+			} else {
+				prefix = req.ImageURL
+			}
+			log.Printf("[SECURITY] Invalid image upload attempt for car %d: format or content rejected. Prefix: %s", carID, prefix)
 			writeError(w, http.StatusBadRequest, "image format not allowed")
 			return
 		}
