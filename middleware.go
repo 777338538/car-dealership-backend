@@ -359,12 +359,13 @@ func ValidateImageURL(url string) bool {
 
 	// If it's a base64 image, validate it starts with allowed type
 	if strings.HasPrefix(lower, "data:image/") {
-		allowedDataTypes := []string{
-			"data:image/jpeg;base64,",
-			"data:image/png;base64,",
-			"data:image/gif;base64,",
-			"data:image/webp;base64,",
-		}
+			allowedDataTypes := []string{
+				"data:image/jpeg;base64,",
+				"data:image/jpg;base64,",
+				"data:image/png;base64,",
+				"data:image/gif;base64,",
+				"data:image/webp;base64,",
+			}
 		valid := false
 		for _, allowed := range allowedDataTypes {
 			if strings.HasPrefix(lower, allowed) {

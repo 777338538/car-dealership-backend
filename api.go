@@ -137,8 +137,9 @@ func safeMsg(status int, original string) string {
 		"admin access required": true, "invalid request": true, "missing required fields": true,
 		"invalid credentials": true, "email already exists": true, "car not found": true,
 		"car already sold": true, "access denied": true, "page not found": true,
-		"too many requests, please slow down": true, "invalid id": true,
-		"message sent successfully": true, "invalid input": true, "image not allowed": true,
+			"too many requests, please slow down": true, "invalid id": true,
+			"message sent successfully": true, "invalid input": true, "image not allowed": true,
+			"image format not allowed": true, "image too large (max 5MB)": true,
 		"message too long": true, "invalid email": true, "invalid phone": true,
 		"invalid slug": true, "invalid role": true, "name too long": true,
 		"field too long": true, "password too short": true, "content too long": true,
@@ -509,15 +510,16 @@ func (s *APIServer) handleAddCarImage(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusBadRequest, "invalid request")
 		return
 	}
-	if !ValidateImageURL(req.ImageURL) {
-		log.Printf("[SECURITY] Invalid image upload attempt for car %d", carID)
-		writeError(w, http.StatusBadRequest, "image not allowed")
-		return
-	}
-	if len(req.ImageURL) > maxBase64Size {
-		writeError(w, http.StatusBadRequest, "image not allowed")
-		return
-	}
+		if !ValidateImageURL(req.ImageURL) {
+			log.Printf("[SECURITY] Invalid image upload attempt for car %d: format or content rejected", carID)
+			writeError(w, http.StatusBadRequest, "image format not allowed")
+			return
+		}
+		if len(req.ImageURL) > maxBase64Size {
+			log.Printf("[SECURITY] Image too large for car %d: %d bytes", carID, len(req.ImageURL))
+			writeError(w, http.StatusBadRequest, "image too large (max 5MB)")
+			return
+		}
 	if _, err := s.store.GetCarByID(carID); err != nil {
 		writeError(w, http.StatusNotFound, "car not found")
 		return
